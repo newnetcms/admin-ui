@@ -1,0 +1,137 @@
+@media screen and (min-width: 992px) {
+    .enable-megamenu{
+        .sidebar-toggle-icon {
+            display: none;
+        }
+
+        .sidebar {
+            margin-left: -250px;
+        }
+
+        &.fixed .sidebar + .content-wrapper {
+            margin-left: 0;
+        }
+
+        &.fixed .navbar-custom-menu.navbar {
+            left: 0;
+        }
+    }
+}
+
+.main-megamenu {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0 -15px;
+
+    a {
+        color: #363636;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .mm-active{
+        > a{
+            color: #37a000;
+            background: #f9f9f9;
+        }
+    }
+
+    i.mr-2 {
+        margin-right: 2px !important;
+        text-align: center;
+        width: 1.25em;
+    }
+
+    .nav-third-level,
+    .nav-second-level{
+        display: none;
+        position: absolute;
+        z-index: 22;
+        top: 65px;
+        left: 0;
+        min-width: 250px;
+        background: #fff;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        box-shadow: 0 0.25rem 0.5rem 0.125rem rgba(0, 0, 0, 0.3);
+
+        > li {
+            position: relative;
+
+            > a {
+                display: block;
+                padding: 10px 20px;
+            }
+
+            &.mm-active,
+            &:hover{
+                > a {
+                    color: #37a000;
+                    background: #f9f9f9;
+                }
+            }
+        }
+
+        > li + li {
+            border-top: solid 1px #f7f7f7;
+        }
+    }
+
+    > li {
+        position: relative;
+
+        > a {
+            display: block;
+            padding: 25px 20px;
+            text-transform: uppercase;
+            font-weight: 400;
+            white-space: nowrap;
+
+            > i:not(.nav-arrow) {
+                font-size: 16px;
+            }
+
+            &.has-arrow {
+                &:after {
+                    content: '';
+                }
+            }
+        }
+
+        &:hover {
+            > a {
+                color: #37a000;
+                background: #fbfbfb;
+            }
+
+            .nav-second-level {
+                display: block;
+            }
+        }
+    }
+
+    .nav-second-level {
+        .nav-arrow {
+            position: absolute;
+            right: 10px;
+            line-height: 20px;
+        }
+
+        .nav-third-level{
+            display: none;
+            position: absolute;
+            left: 100%;
+            top: 0;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        > li:hover {
+            .nav-third-level {
+                display: block;
+            }
+        }
+    }
+}

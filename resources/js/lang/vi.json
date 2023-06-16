@@ -1,0 +1,13 @@
+{
+  "table_button_delete": {
+    "title": "Xóa dữ liệu",
+    "text": "Bạn có chắc chắn muốn xóa dữ liệu này?",
+    "yes": "Đồng ý xóa!",
+    "no": "Hủy bỏ",
+    "deleted": "Hoàn tất!",
+    "deleted_message": "Đã xóa dữ liệu thành công!",
+    "error": "Lỗi!",
+    "error_message": "Không thể thực hiện, vui lòng thử lại"
+  }
+}
+

@@ -1,0 +1,21 @@
+{
+    "name": "newnetcms/admin-ui",
+    "description": "Admin UI",
+    "require": {
+    },
+    "autoload": {
+        "psr-4": {
+            "Newnet\\AdminUi\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Newnet\\AdminUi\\AdminUiServiceProvider"
+            ],
+            "aliases": {
+                "AdminMenu": "Newnet\\AdminUi\\Facades\\AdminMenu"
+            }
+        }
+    }
+}

@@ -1,0 +1,8 @@
+/* icon font path, required */
+$--font-path: '/vendor/newnet-admin/fonts';
+
+//@import "~element-ui/packages/theme-chalk/src/index";
+
+@import "~element-ui/packages/theme-chalk/src/base.scss";
+@import "~element-ui/packages/theme-chalk/src/loading.scss";
+@import "~element-ui/packages/theme-chalk/src/tree.scss";
