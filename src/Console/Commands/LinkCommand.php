@@ -16,6 +16,10 @@ class LinkCommand extends Command
         $target = realpath(__DIR__.'/../../../public/newnet-admin');
         $link = public_path('vendor/newnet-admin');
 
+        if (!File::isDirectory(public_path('vendor'))) {
+            File::makeDirectory(public_path('vendor'), 0755, true);
+        }
+
         if (!File::exists($link)) {
             File::link($target, $link);
 
