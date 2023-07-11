@@ -13,7 +13,7 @@
                             </div>
                         @endif
                     @endforeach
-                @elseif(method_exists($item, 'getMedia') && $item->hasMedia($name))
+                @elseif($item && method_exists($item, 'getMedia') && $item->hasMedia($name))
                     @foreach($item->getMedia($name) as $media)
                         <div class="gallery-item" data-alt="{{ object_get($media, 'mediaTags.label') }}">
                             <img src="{{ imageProxy($media->getUrl(), 300, 300) }}" alt="Image">
