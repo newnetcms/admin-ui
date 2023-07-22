@@ -10,6 +10,7 @@
                {{ !empty($maskOption) ? "data-mask-option=" . json_encode($maskOption) : '' }}
                {{ !empty($disabled) ? 'disabled' : '' }}
                {{ !empty($readonly) ? 'readonly' : '' }}
+               @if (isset($type) && $type == 'number') step="{{ $step ?? 'any' }}" @endif
                placeholder="{{ $placeholder ?? $label }}"
         >
         @error(get_dot_array_form($name))
