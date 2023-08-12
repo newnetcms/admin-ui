@@ -176,7 +176,7 @@ body.enable-sidebar {
 }
 
 .cms-og-container {
-    width: 476px;
+    width: 100%;
     margin-bottom: 2.4rem;
     border: 1px solid #e6e9eb;
     background: #fff;
@@ -309,7 +309,7 @@ body.enable-sidebar {
 }
 
 .cms-twitter-container {
-    width: 591px;
+    width: 100%;
     margin-bottom: 2.4rem;
     border: 1px solid #e6e9eb;
     background: #fff;
