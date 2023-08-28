@@ -5,7 +5,7 @@
             <div class="fileinput fileinput-new" data-provides="fileinput">
                 @if(method_exists($item, 'getFirstMediaUrl') && $item->hasMedia($name))
                     <div class="fileinput-new img-thumbnail" style="max-width: 250px; max-height: 250px;">
-                        <img src="{{ $item->getFirstMediaUrl($name, 'thumb') }}" alt="Image">
+                        <img src="{{ Img::url($item->getFirstMedia($name)->getUrl(), 300, 300) }}" alt="Image">
                     </div>
                 @endif
                 <div class="fileinput-preview fileinput-exists img-thumbnail" style="max-width: 250px; max-height: 250px;"></div>

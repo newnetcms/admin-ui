@@ -21,6 +21,16 @@
                             <a href="#" class="remove-media" title="Delete Image"><i class="fas fa-times-circle"></i></a>
                         </div>
                     @endforeach
+                @elseif(($listMedia = object_get($item, get_dot_array_form($name))) && is_array($listMedia))
+                    @foreach($listMedia as $mediaId)
+                        @if($media = get_media($mediaId))
+                            <div class="gallery-item" data-alt="{{ object_get($media, 'mediaTags.label') }}">
+                                <img src="{{ imageProxy($media->getUrl(), 300, 300) }}" alt="Image">
+                                <input type="hidden" name="{{ $name }}[]" value="{{ $media->id }}">
+                                <a href="#" class="remove-media" title="Delete Image"><i class="fas fa-times-circle"></i></a>
+                            </div>
+                        @endif
+                    @endforeach
                 @endif
             </div>
 
