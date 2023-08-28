@@ -3,6 +3,7 @@
     <div class="col-12">
         <div class="group-validate gallery-form-group @error(get_dot_array_form($name)) is-invalid @enderror">
             <div class="gallery-list">
+                <input type="hidden" name="{{ $name }}">
                 @if(($listMedia = object_get($item, get_dot_array_form($name))) && $listMedia instanceof \Illuminate\Support\Collection && is_numeric($listMedia->first()))
                     @foreach($listMedia as $mediaId)
                         @if($media = get_media($mediaId))
