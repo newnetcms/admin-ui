@@ -71,6 +71,7 @@ class AdminUiServiceProvider extends ServiceProvider
         Blade::include('admin::form.datetimeinput', 'datetimeinput');
         Blade::include('admin::form.daterangeinput', 'daterangeinput');
         Blade::include('admin::form.datetimerangeinput', 'datetimerangeinput');
+        Blade::include('admin::form.codemirror', 'codemirror');
 
         Blade::include('admin::form.translatable', 'translatable');
         Blade::include('admin::form.translatable-alert', 'translatableAlert');

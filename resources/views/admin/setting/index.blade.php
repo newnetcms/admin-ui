@@ -38,6 +38,8 @@
                 <div class="form-horizontal">
                     @input(['name' => 'site_title', 'label' => __('admin::setting.general.site_title')])
                     @input(['name' => 'site_title_short', 'label' => __('admin::setting.general.site_title_short')])
+                    @codemirror(['name' => 'code_head', 'label' => __('admin::setting.general.code_head')])
+                    @codemirror(['name' => 'code_footer', 'label' => __('admin::setting.general.code_footer')])
                     @mediafile(['name' => 'logo', 'label' => __('admin::setting.general.logo'), 'conversion' => '', 'clearable' => true])
                     @mediafile(['name' => 'logo_login', 'label' => __('admin::setting.general.logo_login'), 'conversion' => '', 'clearable' => true])
                     @mediafile(['name' => 'logo_admin', 'label' => __('admin::setting.general.logo_admin'), 'conversion' => '', 'clearable' => true])

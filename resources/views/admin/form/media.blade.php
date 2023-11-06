@@ -7,7 +7,7 @@
 
         <div class="group-validate media-form-group @error(get_dot_array_form($name)) is-invalid @enderror">
             <div class="media-preview">
-                @if(($mediaId = $value ?? object_get($item, get_dot_array_form($name))) && is_numeric($mediaId) && ($media = get_media($mediaId)))
+                @if(($mediaId = old(get_dot_array_form($name), $value ?? object_get($item, get_dot_array_form($name)))) && is_numeric($mediaId) && ($media = get_media($mediaId)))
                     <a href="{{ $media->getUrl() }}" target="_blank">
                         @if($media->isOfType('image'))
                             <img src="{{ $media->getUrl($conversion ?? 'thumb') }}" alt="Image" class="img-thumbnail">

@@ -432,3 +432,13 @@ body.enable-sidebar {
         top: 45px;
     }
 }
+
+input[type="color"].form-control {
+    width: 100px;
+    padding: 0;
+    border: none;
+}
+
+input[type="color"].form-control::-webkit-color-swatch {
+    border: none;
+}
