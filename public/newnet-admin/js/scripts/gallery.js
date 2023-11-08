@@ -97,40 +97,40 @@ $(document).ready(function () {
         })
     });
 
-    $('.gallery-list').on('click', '.gallery-item img', function () {
-        let media_id = $(this).find('input').val();
-        let alt = $(this).data('alt');
-
-        let newAlt = prompt("Nhập thẻ ALT của hình ảnh:", alt);
-        if (newAlt !== null) {
-            $(this).data('alt', newAlt);
-
-            let token = $('meta[name="csrf-token"]').attr('content');
-
-            $.ajax({
-                url: window.adminPath + '/media/media-tag',
-                type: 'POST',
-                data: {
-                    media_id: media_id,
-                    label: newAlt,
-                    _token: token,
-                },
-                success: function (e) {
-                    toastr.options = {
-                        "debug": false,
-                        "newestOnTop": false,
-                        "positionClass": "toast-bottom-right",
-                        "closeButton": true,
-                        "toastClass": "animated fadeInDown"
-                    };
-
-                    if (e.success) {
-                        toastr.success(e.message || 'Đã cập nhật thành công!');
-                    } else {
-                        toastr.error(e.message || 'Đã xảy ra lỗi!');
-                    }
-                }
-            });
-        }
-    });
+    // $('.gallery-list').on('click', '.gallery-item img', function () {
+    //     let media_id = $(this).find('input').val();
+    //     let alt = $(this).data('alt');
+    //
+    //     let newAlt = prompt("Nhập thẻ ALT của hình ảnh:", alt);
+    //     if (newAlt !== null) {
+    //         $(this).data('alt', newAlt);
+    //
+    //         let token = $('meta[name="csrf-token"]').attr('content');
+    //
+    //         $.ajax({
+    //             url: window.adminPath + '/media/media-tag',
+    //             type: 'POST',
+    //             data: {
+    //                 media_id: media_id,
+    //                 label: newAlt,
+    //                 _token: token,
+    //             },
+    //             success: function (e) {
+    //                 toastr.options = {
+    //                     "debug": false,
+    //                     "newestOnTop": false,
+    //                     "positionClass": "toast-bottom-right",
+    //                     "closeButton": true,
+    //                     "toastClass": "animated fadeInDown"
+    //                 };
+    //
+    //                 if (e.success) {
+    //                     toastr.success(e.message || 'Đã cập nhật thành công!');
+    //                 } else {
+    //                     toastr.error(e.message || 'Đã xảy ra lỗi!');
+    //                 }
+    //             }
+    //         });
+    //     }
+    // });
 });

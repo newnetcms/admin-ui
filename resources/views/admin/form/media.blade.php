@@ -10,7 +10,7 @@
                 @if(($mediaId = old(get_dot_array_form($name), $value ?? object_get($item, get_dot_array_form($name)))) && is_numeric($mediaId) && ($media = get_media($mediaId)))
                     <a href="{{ $media->getUrl() }}" target="_blank">
                         @if($media->isOfType('image'))
-                            <img src="{{ $media->getUrl($conversion ?? 'thumb') }}" alt="Image" class="img-thumbnail">
+                            <img src="{{ Img::url($media->getUrl(), 300, 300) }}" alt="Image" class="img-thumbnail">
                         @else
                             {{ $media->name }}
                         @endif
@@ -19,7 +19,7 @@
                 @elseif(($media = $value ?? object_get($item, get_dot_array_form($name))) && $media instanceof \Newnet\Media\Models\Media)
                     <a href="{{ $media->getUrl() }}" target="_blank">
                         @if($media->isOfType('image'))
-                            <img src="{{ $media->getUrl($conversion ?? 'thumb') }}" alt="Image" class="img-thumbnail">
+                            <img src="{{ Img::url($media->getUrl(), 300, 300) }}" alt="Image" class="img-thumbnail">
                         @else
                             {{ $media->name }}
                         @endif
@@ -28,7 +28,7 @@
                 @elseif($item && method_exists($item, 'getFirstMediaUrl') && $item->hasMedia($name))
                     <a href="{{ $item->getFirstMediaUrl($name) }}" target="_blank">
                         @if($media->isOfType('image'))
-                            <img src="{{ $item->getFirstMediaUrl($name, $conversion ?? 'thumb') }}" alt="Image" class="img-thumbnail">
+                            <img src="{{ Img::url($item->getFirstMedia($name)->getUrl(), 300, 300) }}" alt="Image" class="img-thumbnail">
                         @else
                             {{ $media->name }}
                         @endif
