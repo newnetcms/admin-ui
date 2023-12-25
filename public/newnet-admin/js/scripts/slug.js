@@ -226,10 +226,10 @@ $(document).ready(function () {
             }
         });
 
-        $slugFrom.on('focusout', function () {
-            if ($slugFrom.val().toString() !== '' && $slug.val().toString() === '') {
-                $slug.val(generateSlug()).trigger('change');
-            }
-        });
+        // $slugFrom.on('focusout', function () {
+        //     if ($slugFrom.val().toString() !== '' && $slug.val().toString() === '') {
+        //         $slug.val(generateSlug()).trigger('change');
+        //     }
+        // });
     });
 });
