@@ -22,6 +22,7 @@
     @assetadd('typicons', asset('vendor/newnet-admin/plugins/typicons/src/typicons.min.css'))
     @assetadd('themify-icons', asset('vendor/newnet-admin/plugins/themify-icons/themify-icons.min.css'))
     @assetadd('sweetalert', asset('vendor/newnet-admin/plugins/sweetalert/sweetalert.css'))
+    @assetadd('toastr', asset('vendor/newnet-admin/plugins/toastr/toastr.css'))
     @assetadd('animate', asset('vendor/newnet-admin/plugins/animate.min.css'))
     @assetadd('animate', asset('vendor/newnet-admin/plugins/animate.min.css'))
 
@@ -88,6 +89,7 @@
 @assetadd('perfect-scrollbar', asset('vendor/newnet-admin/plugins/perfect-scrollbar/dist/perfect-scrollbar.min.js'))
 
 @assetadd('sweetalert', asset('vendor/newnet-admin/plugins/sweetalert/sweetalert.min.js'))
+@assetadd('toastr', asset('vendor/newnet-admin/plugins/toastr/toastr.min.js'))
 
 @assetadd('sidebar', asset('vendor/newnet-admin/dist/js/sidebar.js'), ['jquery'])
 @assetadd('core-script', asset('vendor/newnet-admin/js/script.js'), ['jquery'])
