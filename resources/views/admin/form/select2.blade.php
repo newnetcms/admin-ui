@@ -11,9 +11,7 @@
                 placeholder="{{ $placeholder ?? $label }}"
                 data-allow-clear="{{ !empty($allowClear) && empty($multiple) ? 'true' : 'false' }}"
         >
-            @if(!empty($allowClear ?? true))
-                <option value="">{{ $placeholder ?? "--- {$label} ---" }}</option>
-            @endif
+            <option value="">{{ $placeholder ?? "--- {$label} ---" }}</option>
             @foreach($options as $option)
                 <option value="{{ $option['value'] }}"
                     {{ get_selected_value($option['value'], old(get_dot_array_form($name), $value ?? object_get($item, get_dot_array_form($name)))) }}
