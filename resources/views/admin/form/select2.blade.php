@@ -14,7 +14,7 @@
             <option value="">{{ $placeholder ?? "--- {$label} ---" }}</option>
             @foreach($options as $option)
                 <option value="{{ $option['value'] }}"
-                    {{ get_selected_value($option['value'], old(get_dot_array_form($name), $value ?? object_get($item, get_dot_array_form($name)))) }}
+                    {{ get_selected_value($option['value'], old(get_dot_array_form($name), $value ?? object_get($item, get_dot_array_form($name)) ?? $default ?? null)) }}
                 >
                     {{ $option['label'] }}
                 </option>
