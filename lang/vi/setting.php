@@ -19,6 +19,7 @@ return [
         'redirect_404_to_home' => 'Redirect 404 to home',
         'code_head'            => 'Code Header',
         'code_footer'          => 'Code Footer',
+        'maintenance_enabled'  => 'Chế độ bảo trì',
     ],
 
     'notification' => [
