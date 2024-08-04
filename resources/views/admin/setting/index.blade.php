@@ -44,6 +44,7 @@
                     @mediafile(['name' => 'logo_login', 'label' => __('admin::setting.general.logo_login'), 'conversion' => '', 'clearable' => true])
                     @mediafile(['name' => 'logo_admin', 'label' => __('admin::setting.general.logo_admin'), 'conversion' => '', 'clearable' => true])
                     @mediafile(['name' => 'favicon', 'label' => __('admin::setting.general.favicon'), 'conversion' => ''])
+                    @checkbox(['name' => 'maintenance_enabled', 'label' => __('admin::setting.general.maintenance_enabled')])
                 </div>
             </div>
             <div class="card-footer text-right">
