@@ -61,6 +61,7 @@ class AdminUiServiceProvider extends ServiceProvider
         Blade::include('admin::form.textarea', 'textarea');
         Blade::include('admin::form.editor', 'editor');
         Blade::include('admin::form.file', 'file');
+        Blade::include('admin::form.files', 'files');
         Blade::include('admin::form.image', 'image');
         Blade::include('admin::form.checkbox', 'checkbox');
         Blade::include('admin::form.sumoselect', 'sumoselect');

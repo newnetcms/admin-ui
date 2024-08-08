@@ -1,0 +1,50 @@
+.file-list {
+
+}
+
+.file-list .file-item {
+    position: relative;
+    border-bottom: dashed 1px #919191;
+    padding: 5px 0;
+}
+
+.file-list .file-item .file-name {
+    color: #0969da;
+}
+
+.file-list .file-item .file-name:before {
+    content: "\f0c6";
+    font-family: "Font Awesome 5 Pro";
+    margin-right: 5px;
+}
+
+.file-list .file-item + .file-item {
+    margin-top: 5px;
+}
+
+.file-list .file-item .remove-media {
+    color: #bababa;
+    background: #ffffff;
+    width: 16px;
+    height: 16px;
+    font-size: 14px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+}
+
+.file-list .file-item .remove-media:hover {
+    color: #ff0000;
+}
+
+.inputFiles{
+    display: none;
+}
+
+.labelFiles{
+    color: #37a000;
+    cursor: pointer;
+    margin-bottom: 0;
+}
