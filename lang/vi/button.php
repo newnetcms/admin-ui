@@ -11,4 +11,7 @@ return [
     'remove'        => 'Remove',
     'back'          => 'Trở lại',
     'search'        => 'Tìm kiếm',
+    'export_excel'  => 'Xuất Excel',
+    'export'        => 'Xuất Dữ Liệu',
+    'import'        => 'Nhập Dữ Liệu',
 ];
