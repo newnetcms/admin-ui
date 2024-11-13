@@ -21,5 +21,7 @@
         $('a[data-toggle]').on('shown.bs.tab', function (e) {
             $(window).trigger('resize');
         });
+
+        $('[data-toggle="tooltip"]').tooltip();
     });
 }(jQuery));
