@@ -20,6 +20,7 @@
 
         $('a[data-toggle]').on('shown.bs.tab', function (e) {
             $(window).trigger('resize');
+            window.dispatchEvent(new Event('resize'));
         });
 
         $('[data-toggle="tooltip"]').tooltip();
