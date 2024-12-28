@@ -75,6 +75,7 @@ class AdminUiServiceProvider extends ServiceProvider
         Blade::include('admin::form.codemirror', 'codemirror');
         Blade::include('admin::form.money', 'money');
         Blade::include('admin::form.range', 'range');
+        Blade::include('admin::form.code', 'code');
 
         Blade::include('admin::form.translatable', 'translatable');
         Blade::include('admin::form.translatable-alert', 'translatableAlert');
