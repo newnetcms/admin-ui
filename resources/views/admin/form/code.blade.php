@@ -7,6 +7,8 @@
                   placeholder="{{ $placeholder ?? $label }}"
         ></textarea>
 
+        <div id="ace_{{ $name }}"></div>
+
         @error(get_dot_array_form($name))
             <span class="invalid-feedback text-left">
                 <strong>{{ $message }}</strong>
@@ -21,10 +23,13 @@
     </div>
 </div>
 
+@assetadd(asset('vendor/newnet-admin/plugins/ace/ace.js'))
+
 @push('styles')
     <style>
-        .component-{{ $name }} .cm-editor {
-            height: 400px;
+        #ace_{{ $name }} {
+            height: 275px;
+            margin-top: 5px;
         }
     </style>
 @endpush
@@ -32,30 +37,30 @@
 @push('scripts')
     <textarea class="d-none" id="{{ $name }}_content">{{ old(get_dot_array_form($name), $value ?? object_get($item, get_dot_array_form($name))) }}</textarea>
 
-    @if ($langType = $lang ?? 'html')
-        <script type="importmap">
-            {
-                "imports": {
-                    "codemirror/": "{{ asset('vendor/newnet-admin/plugins/codemirror') }}/"
-            }
-        }
-        </script>
-        <script async type="module">
-            import { basicSetup, EditorView } from "codemirror/codemirror/dist/index.js";
-            import { {{ $langType }} } from "codemirror/lang-{{ $langType }}/dist/index.js";
-
+    <script>
+        jQuery(document).ready(function ($) {
             let textarea = document.getElementById('{{ $name }}');
             let content = document.getElementById('{{ $name }}_content');
 
-            let view = new EditorView({
-                doc: content.value,
-                extensions: [basicSetup, {{ $langType }}()],
+            let editor = ace.edit("ace_{{ $name }}");
+            editor.session.setMode("ace/mode/html");
+            editor.setAutoScrollEditorIntoView(true);
+            editor.setShowPrintMargin(false);
+            editor.setOption("enableEmmet", true);
+            editor.setOptions({
+                enableSnippets: true,
+                enableBasicAutocompletion: true
             });
 
-            textarea.insertAdjacentElement("afterend", view.dom);
-            textarea.closest('form').onsubmit = function () {
-                textarea.value = view.state.doc;
-            }
-        </script>
-    @endif
+            let fromSetValue = false;
+            editor.on("change", function() {
+                if (!fromSetValue) {
+                    textarea.value = editor.getValue();
+                }
+            })
+            fromSetValue = true;
+            editor.setValue(content.value, -1);
+            fromSetValue = false;
+        });
+    </script>
 @endpush
