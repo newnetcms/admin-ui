@@ -10,6 +10,7 @@
                 class="form-control select2 @error(get_dot_array_form($name)) is-invalid @enderror"
                 placeholder="{{ $placeholder ?? $label }}"
                 data-allow-clear="{{ !empty($allowClear) && empty($multiple) ? 'true' : 'false' }}"
+                {{ !empty($disabled) ? 'disabled' : '' }}
         >
             <option value="">{{ $placeholder ?? "--- {$label} ---" }}</option>
             @foreach($options as $option)
