@@ -11,6 +11,7 @@
                 placeholder="{{ $placeholder ?? $label }}"
                 data-allow-clear="{{ !empty($allowClear) && empty($multiple) ? 'true' : 'false' }}"
                 {{ !empty($disabled) ? 'disabled' : '' }}
+                {{ !empty($readonly) ? 'readonly' : '' }}
         >
             <option value="">{{ $placeholder ?? "--- {$label} ---" }}</option>
             @foreach($options as $option)
