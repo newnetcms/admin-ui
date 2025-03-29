@@ -41,6 +41,7 @@
         jQuery(document).ready(function ($) {
             let textarea = document.getElementById('{{ $name }}');
             let content = document.getElementById('{{ $name }}_content');
+            textarea.value = content.value;
 
             let editor = ace.edit("ace_{{ $name }}");
             editor.session.setMode("ace/mode/html");
