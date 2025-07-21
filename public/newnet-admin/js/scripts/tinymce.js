@@ -102,7 +102,13 @@ $(document).ready(function () {
             editor.on('paste', function(e) {
                 console.log('Paste content');
             });
-        }
+        },
+        remove_empty: false,              // Không xóa thẻ trống
+        verify_html: false,               // Không kiểm tra lại HTML
+        valid_elements: '*[*]',           // Cho phép tất cả các thẻ và thuộc tính
+        // extended_valid_elements: '*[*]',  // Bổ sung cho valid_elements
+        forced_root_block: false,         // Không tự bọc <p> quanh nội dung
+        forced_clean_up: false,           // Không dọn dẹp HTML khi paste
     });
 
     $('.fixed.enable-megamenu').removeClass('fixed');
