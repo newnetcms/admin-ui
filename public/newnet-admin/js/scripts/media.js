@@ -20,7 +20,7 @@ $(document).ready(function () {
             formData.append('_token', token);
 
             $.ajax({
-                url: adminPath + '/media/upload',
+                url: window.uploadMediaPath || window.adminPath + '/media/upload',
                 data: formData,
                 type: 'POST',
                 processData: false,
@@ -72,7 +72,11 @@ $(document).ready(function () {
                         text = e.statusText || 'Không thể xử lý';
                     }
 
-                    swal({title: 'Error', text, type: 'error'});
+                    if (typeof swal === 'undefined') {
+                        alert(text);
+                    } else {
+                        swal({title: 'Error', text, type: 'error'});
+                    }
                 }
             })
         })
