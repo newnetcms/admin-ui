@@ -39,6 +39,7 @@
                     @input(['name' => 'site_title', 'label' => __('admin::setting.general.site_title')])
                     @input(['name' => 'site_title_short', 'label' => __('admin::setting.general.site_title_short')])
                     @code(['name' => 'code_head', 'label' => __('admin::setting.general.code_head')])
+                    @code(['name' => 'code_body', 'label' => __('admin::setting.general.code_body')])
                     @code(['name' => 'code_footer', 'label' => __('admin::setting.general.code_footer')])
                     @mediafile(['name' => 'logo', 'label' => __('admin::setting.general.logo'), 'conversion' => '', 'clearable' => true])
                     @mediafile(['name' => 'logo_login', 'label' => __('admin::setting.general.logo_login'), 'conversion' => '', 'clearable' => true])

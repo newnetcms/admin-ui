@@ -17,6 +17,9 @@ return [
         'logo_login'           => 'Logo Login',
         'logo_admin'           => 'Logo Admin',
         'redirect_404_to_home' => 'Redirect 404 to home',
+        'code_head'            => 'Code Header',
+        'code_body'            => 'Code Body',
+        'code_footer'          => 'Code Footer',
         'maintenance_enabled'  => 'Maintenance Mode',
     ],
 
