@@ -26,6 +26,12 @@
     border: solid 1px #d9d9d9;
 }
 
+.gallery-list .gallery-item .media-file-type-preview {
+    width: 100%;
+    height: auto;
+    padding: 15px 0;
+}
+
 .gallery-list .gallery-item .remove-media {
     display: none;
     z-index: 5;

@@ -1,6 +1,25 @@
 $(document).ready(function () {
     "use strict"; // Start of use strict
 
+    // Mirrors lib/media/resources/views/form/partials/file-type-icon.blade.php - keep the two in sync
+    function fileIconClass(ext) {
+        var map = {
+            PDF: 'fa-file-pdf',
+            DOC: 'fa-file-word', DOCX: 'fa-file-word',
+            XLS: 'fa-file-excel', XLSX: 'fa-file-excel', CSV: 'fa-file-excel',
+            PPT: 'fa-file-powerpoint', PPTX: 'fa-file-powerpoint',
+            ZIP: 'fa-file-archive', RAR: 'fa-file-archive', '7Z': 'fa-file-archive', TAR: 'fa-file-archive', GZ: 'fa-file-archive',
+            MP3: 'fa-file-audio', WAV: 'fa-file-audio', OGG: 'fa-file-audio',
+            MP4: 'fa-file-video', MOV: 'fa-file-video', AVI: 'fa-file-video', WMV: 'fa-file-video', MKV: 'fa-file-video',
+            TXT: 'fa-file-alt'
+        };
+        return map[(ext || '').toUpperCase()] || 'fa-file';
+    }
+
+    function fileTypePreviewHtml(ext) {
+        return '<div class="media-file-type-preview"><i class="fas ' + fileIconClass(ext) + '"></i><span class="media-file-ext">' + (ext || '') + '</span></div>';
+    }
+
     let $galleryList = $('.gallery-list');
 
     $galleryList.sortable({placeholder: 'gallery-item gallery-highlight'});
@@ -71,7 +90,10 @@ $(document).ready(function () {
                 let html = [];
 
                 e.files.map(function (f) {
-                    html.push(`<div class="gallery-item ui-sortable-handle"><img src="${f.thumb}" alt="Image"><input type="hidden" name="${galleryName}[]" value="${f.id}"><a href="#" class="remove-media" title="Delete Image"><i class="fas fa-times-circle"></i></a></div>`);
+                    const preview = f.is_image
+                        ? `<img src="${f.thumb}" alt="Image">`
+                        : fileTypePreviewHtml(f.extension);
+                    html.push(`<div class="gallery-item ui-sortable-handle">${preview}<input type="hidden" name="${galleryName}[]" value="${f.id}"><a href="#" class="remove-media" title="Delete Image"><i class="fas fa-times-circle"></i></a></div>`);
                 });
 
                 $file.closest('.gallery-form-group').find('.gallery-list').append(html.join("\n"));

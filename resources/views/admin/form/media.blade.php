@@ -12,7 +12,7 @@
                         @if($media->isOfType('image'))
                             <img src="{{ Img::url($media->getUrl(), 300, 300) }}" alt="Image" class="img-thumbnail">
                         @else
-                            {{ $media->name }}
+                            @include('media::form.partials.file-type-icon', ['media' => $media])
                         @endif
                     </a>
                     <input type="hidden" name="{{ $name }}" value="{{ $media->id }}">
@@ -21,19 +21,20 @@
                         @if($media->isOfType('image'))
                             <img src="{{ Img::url($media->getUrl(), 300, 300) }}" alt="Image" class="img-thumbnail">
                         @else
-                            {{ $media->name }}
+                            @include('media::form.partials.file-type-icon', ['media' => $media])
                         @endif
                     </a>
                     <input type="hidden" name="{{ $name }}" value="{{ $media->id }}">
                 @elseif($item && method_exists($item, 'getFirstMediaUrl') && $item->hasMedia($name))
+                    @php($media = $item->getFirstMedia($name))
                     <a href="{{ $item->getFirstMediaUrl($name) }}" target="_blank">
                         @if($media->isOfType('image'))
-                            <img src="{{ Img::url($item->getFirstMedia($name)->getUrl(), 300, 300) }}" alt="Image" class="img-thumbnail">
+                            <img src="{{ Img::url($media->getUrl(), 300, 300) }}" alt="Image" class="img-thumbnail">
                         @else
-                            {{ $media->name }}
+                            @include('media::form.partials.file-type-icon', ['media' => $media])
                         @endif
                     </a>
-                    <input type="hidden" name="{{ $name }}" value="{{ $item->getFirstMedia($name)->id }}">
+                    <input type="hidden" name="{{ $name }}" value="{{ $media->id }}">
                 @endif
 
                 <a href="#" class="remove-media">
