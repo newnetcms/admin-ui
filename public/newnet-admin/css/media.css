@@ -12,7 +12,11 @@
     position: relative;
     max-width: 150px;
     max-height: 150px;
-    display: flex;
+    width: fit-content;
+}
+
+.media-preview .ext-svg {
+    min-width: 100px;
 }
 
 .remove-media{
