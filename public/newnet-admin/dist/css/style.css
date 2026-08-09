@@ -2347,7 +2347,7 @@ table code {
 #toTop {
     position: fixed;
     bottom: 20px;
-    right: 20px;
+    right: 0;
     cursor: pointer;
     display: none
 }
