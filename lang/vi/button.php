@@ -14,4 +14,5 @@ return [
     'export_excel'  => 'Xuất Excel',
     'export'        => 'Xuất Dữ Liệu',
     'import'        => 'Nhập Dữ Liệu',
+    'copy'          => 'Sao chép',
 ];
