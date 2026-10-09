@@ -21,19 +21,26 @@
                     showCancelButton: true,
                     cancelButtonText: this.$t("table_button_delete.no"),
                     confirmButtonColor: "#DD6B55",
-                    confirmButtonText: this.$t("table_button_delete.yes")
+                    confirmButtonText: this.$t("table_button_delete.yes"),
+                    closeOnConfirm: false,
+                    showLoaderOnConfirm: true
                 }, () => {
                     this.axios.delete(this.urlDelete).then(res => {
                         if (res.data.success) {
                             window.location.reload();
                         } else {
-                            swal({
-                                title: this.$t("table_button_delete.error"),
-                                text: res.data.message || this.$t("table_button_delete.error_message"),
-                                type: "error"
-                            });
+                            this.showDeleteError(res.data.message);
                         }
+                    }).catch(err => {
+                        this.showDeleteError(err.response && err.response.data && err.response.data.message);
                     });
+                });
+            },
+            showDeleteError(message) {
+                swal({
+                    title: this.$t("table_button_delete.error"),
+                    text: message || this.$t("table_button_delete.error_message"),
+                    type: "error"
                 });
             }
         }
