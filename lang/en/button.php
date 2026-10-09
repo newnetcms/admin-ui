@@ -11,4 +11,5 @@ return [
     'remove'        => 'Remove',
     'back'          => 'Back',
     'search'        => 'Search',
+    'copy'          => 'Copy',
 ];
