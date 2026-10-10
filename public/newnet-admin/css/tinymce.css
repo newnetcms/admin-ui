@@ -1,3 +1,68 @@
 .tox.tox-tinymce--toolbar-sticky-on .tox-editor-header {
 
 }
+
+/*
+ * Kéo-thả file vào vùng soạn thảo để upload (setupMediaDropUpload trong
+ * tinymce.js) — cùng tông với overlay kéo-thả ở trang Danh sách media và modal
+ * "Quản lý tệp". ::before là nền + viền + lời nhắc, ::after là icon. Chữ/icon
+ * đặt theo --media-drop-center (JS tính giữa phần editor đang thấy trên màn
+ * hình) vì editor autoresize có thể cao hơn viewport. pointer-events:none để
+ * sự kiện drop vẫn tới iframe nội dung bên dưới.
+ */
+.tox-tinymce.media-drop-over::before,
+.tox-tinymce.media-drop-over::after {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    pointer-events: none;
+    color: #fff;
+    text-align: center;
+}
+
+.tox-tinymce.media-drop-over::before {
+    content: attr(data-media-drop-hint);
+    top: 0;
+    bottom: 0;
+    box-sizing: border-box;
+    padding-top: calc(var(--media-drop-center, 50%) + 22px);
+    background: rgba(53, 60, 78, .65);
+    border: 3px dashed #353c4e;
+    border-radius: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    animation: media-editor-drop-pulse 1.6s ease-out infinite;
+}
+
+.tox-tinymce.media-drop-over::after {
+    content: "\f382"; /* fa-cloud-upload-alt */
+    top: var(--media-drop-center, 50%);
+    margin-top: -26px;
+    font-family: "Font Awesome 5 Pro", "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 34px;
+    line-height: 1;
+    animation: media-editor-drop-bounce 1s ease-in-out infinite;
+}
+
+@keyframes media-editor-drop-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(53, 60, 78, .3);
+    }
+    70% {
+        box-shadow: 0 0 0 14px rgba(53, 60, 78, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(53, 60, 78, 0);
+    }
+}
+
+@keyframes media-editor-drop-bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-6px);
+    }
+}
