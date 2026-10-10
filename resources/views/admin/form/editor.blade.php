@@ -20,6 +20,17 @@
     </div>
 </div>
 
+{{-- Thư viện media cho nút "Browse" của dialog Chèn ảnh/Link/Media trong
+     TinyMCE: 1 modal dùng chung cho mọi editor trên trang (@once). Chỉ nhúng khi
+     có module media; cờ NewnetMediaPickerAvailable gán ngay khi parse HTML (trước
+     DOMContentLoaded) để tinymce.js biết có bật file_picker_callback hay không. --}}
+@once
+    @if(view()->exists('media::form.media') && Route::has('media.admin.media.ajaxMedia'))
+        @include('media::form.media', ['name' => 'tinymce_media_picker', 'label' => '', 'media_type' => 'editor'])
+        <script>window.NewnetMediaPickerAvailable = true;</script>
+    @endif
+@endonce
+
 @assetadd('tinymce', asset("vendor/newnet-admin/css/tinymce.css"))
 @assetadd('tinymce', asset("vendor/newnet-admin/plugins/tinymce/tinymce.min.js"), ['jquery'])
 @assetadd('tinymce-script', asset("vendor/newnet-admin/js/scripts/tinymce.js"), ['jquery', 'tinymce'])

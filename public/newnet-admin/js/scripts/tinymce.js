@@ -65,6 +65,28 @@ $(document).ready(function () {
             formData.append('response', 'tinymce');
             xhr.send(formData);
         },
+        // Nút "Browse" trong dialog Chèn ảnh / Link / Media mở thư viện media
+        // (modal "Quản lý tệp" do admin::form.editor nhúng sẵn 1 lần mỗi trang).
+        // Không có module media thì không bật, tránh hiện nút Browse không làm gì.
+        file_picker_types: 'file image media',
+        file_picker_callback: window.NewnetMediaPickerAvailable ? function (callback, value, meta) {
+            if (!window.NewnetMediaPicker) {
+                return;
+            }
+
+            window.NewnetMediaPicker.open({
+                filetype: meta.filetype,
+                onSelect: function (media) {
+                    if (meta.filetype === 'image') {
+                        callback(media.url, {alt: media.name});
+                    } else if (meta.filetype === 'media') {
+                        callback(media.url);
+                    } else {
+                        callback(media.url, {text: media.name, title: media.name});
+                    }
+                }
+            });
+        } : undefined,
         template_cdate_format: '[Date Created (CDATE): %m/%d/%Y : %H:%M:%S]',
         template_mdate_format: '[Date Modified (MDATE): %m/%d/%Y : %H:%M:%S]',
         image_caption: true,
