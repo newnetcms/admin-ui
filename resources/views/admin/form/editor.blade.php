@@ -29,9 +29,21 @@
     @if(view()->exists('media::form.media') && Route::has('media.admin.media.ajaxMedia'))
         @include('media::form.media', ['name' => 'tinymce_media_picker', 'label' => '', 'media_type' => 'editor'])
         @php
+            // Host của chính site (app, CDN, image proxy) — ảnh dán vào có src thuộc
+            // các host này đã là ảnh của mình, không tải về thư viện lần nữa.
+            $tinymceOwnHosts = collect([
+                config('app.url'),
+                request()->getSchemeAndHttpHost(),
+                config('cms.media.use_cdn') ? config('cms.media.cdn_url') : null,
+                config('cms.media.imageproxy.enable') ? config('cms.media.imageproxy.server') : null,
+            ])->filter()->map(fn ($url) => strtolower((string) parse_url($url, PHP_URL_HOST) . (parse_url($url, PHP_URL_PORT) ? ':' . parse_url($url, PHP_URL_PORT) : '')))
+                ->filter()->unique()->values()->all();
+
             $tinymceMediaConfig = [
                 'label' => __('media::media.picker.title'),
                 'uploadUrl' => route('media.admin.media.storeAjax'),
+                'importUrl' => route('media.admin.media.importUrl'),
+                'ownHosts' => $tinymceOwnHosts,
                 // cùng allowlist MediaUploader kiểm tra ở server — chặn sớm ở client
                 'extensions' => array_values(array_map('strtolower', config('cms.media.accept_upload_extension', []))),
                 'messages' => [
@@ -40,6 +52,8 @@
                     'uploadingMany' => __('media::media.upload.uploading_many'),
                     'error' => __('media::media.upload.error'),
                     'unsupportedType' => __('media::media.upload.unsupported_type'),
+                    'importing' => __('media::media.import.importing'),
+                    'importFailed' => __('media::media.import.failed'),
                 ],
             ];
         @endphp

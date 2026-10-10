@@ -42,8 +42,23 @@ $(document).ready(function () {
         return parts.length > 1 ? parts.pop().toLowerCase() : '';
     }
 
-    // Upload 1 file lên cùng endpoint với modal "Quản lý tệp" (storeAjax): trả
-    // về {id, url, name, kind, ...} khi thành công, JSON 422 kèm message khi lỗi.
+    // Đọc response của storeAjax/importUrl: {media: {id, url, name, kind, ...}} khi
+    // thành công, JSON 422 kèm message khi lỗi.
+    function handleMediaResponse(xhr, done) {
+        var res = null;
+        try {
+            res = JSON.parse(xhr.responseText);
+        } catch (err) {
+        }
+
+        if (xhr.status >= 200 && xhr.status < 300 && res && res.media) {
+            done(null, res.media);
+        } else {
+            done((res && res.message) || mediaMessages.error);
+        }
+    }
+
+    // Upload 1 file lên cùng endpoint với modal "Quản lý tệp" (storeAjax).
     function uploadMediaFile(file, onProgress, done) {
         var formData = new FormData();
         formData.append('image-upload[]', file);
@@ -60,17 +75,7 @@ $(document).ready(function () {
         };
 
         xhr.onload = function () {
-            var res = null;
-            try {
-                res = JSON.parse(xhr.responseText);
-            } catch (err) {
-            }
-
-            if (xhr.status >= 200 && xhr.status < 300 && res && res.media) {
-                done(null, res.media);
-            } else {
-                done((res && res.message) || mediaMessages.error);
-            }
+            handleMediaResponse(xhr, done);
         };
 
         xhr.onerror = function () {
@@ -227,6 +232,190 @@ $(document).ready(function () {
         });
     }
 
+    // ------------------------------------------------------------------
+    // Dán nội dung copy từ website khác: ảnh của site ngoài tự tải về thư viện
+    // media rồi thay src sang link của mình (tránh ảnh chết khi site gốc xoá/đổi
+    // link hoặc chặn hotlink). Server tải hộ qua importUrl (có chặn SSRF).
+    // ------------------------------------------------------------------
+    var IMPORT_CONCURRENCY = 3;
+
+    function absoluteHttpUrl(value) {
+        value = (value || '').trim();
+        if (/^\/\//.test(value)) {
+            value = window.location.protocol + value;
+        }
+        return /^https?:\/\//i.test(value) ? value : '';
+    }
+
+    function urlHost(url) {
+        try {
+            return new URL(url).host.toLowerCase();
+        } catch (err) {
+            return '';
+        }
+    }
+
+    function isOwnImage(url) {
+        var host = urlHost(url);
+        return !host || host === window.location.host.toLowerCase() || (mediaConfig.ownHosts || []).indexOf(host) !== -1;
+    }
+
+    // URL ảnh thật của 1 <img> vừa dán: nhiều site lazy-load để src là ảnh giữ chỗ
+    // (data: URI 1px) còn ảnh thật nằm ở data-src / data-lazy-src / data-original.
+    function pastedImageUrl(img) {
+        var src = img.getAttribute('src') || '';
+        if (!src || /^data:/i.test(src)) {
+            src = img.getAttribute('data-src') || img.getAttribute('data-lazy-src') || img.getAttribute('data-original') || src;
+        }
+        return absoluteHttpUrl(src);
+    }
+
+    function importImageUrl(url, done) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', mediaConfig.importUrl, true);
+        xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="csrf-token"]').attr('content'));
+        xhr.setRequestHeader('Accept', 'application/json');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        xhr.onload = function () {
+            handleMediaResponse(xhr, done);
+        };
+
+        xhr.onerror = function () {
+            done(mediaMessages.error);
+        };
+
+        xhr.send(JSON.stringify({url: url}));
+    }
+
+    // Chạy tối đa `limit` việc cùng lúc — bài dán vào có thể có vài chục ảnh,
+    // không bắn hết 1 lượt lên server (mỗi request server phải tải 1 ảnh ngoài).
+    function runWithConcurrency(items, limit, worker, onAllDone) {
+        var nextIndex = 0;
+        var finished = 0;
+
+        function startNext() {
+            if (nextIndex >= items.length) {
+                return;
+            }
+            var item = items[nextIndex++];
+            worker(item, function () {
+                finished++;
+                if (finished === items.length) {
+                    onAllDone();
+                } else {
+                    startNext();
+                }
+            });
+        }
+
+        for (var i = 0; i < Math.min(limit, items.length); i++) {
+            startNext();
+        }
+    }
+
+    // Thay src mọi <img> đang trỏ tới URL gốc (cùng 1 ảnh có thể xuất hiện nhiều
+    // lần). data-mce-src là bản TinyMCE dùng khi xuất nội dung, phải đổi cùng.
+    function replaceImageSrc(editor, fromUrl, toUrl) {
+        editor.dom.select('img').forEach(function (img) {
+            if (img.getAttribute('src') === fromUrl || img.getAttribute('data-mce-src') === fromUrl) {
+                editor.dom.setAttribs(img, {src: toUrl, 'data-mce-src': toUrl});
+            }
+        });
+    }
+
+    function importPastedImages(editor, urls) {
+        var dom = editor.dom;
+        var failed = [];
+        var done = 0;
+        var notification = editor.notificationManager.open({
+            text: dom.encode((mediaMessages.importing || '').replace(':count', urls.length)),
+            progressBar: true,
+            closeButton: false
+        });
+
+        runWithConcurrency(urls, IMPORT_CONCURRENCY, function (url, next) {
+            importImageUrl(url, function (error, media) {
+                if (error) {
+                    failed.push(url);
+                } else {
+                    // Thay dần theo từng ảnh về xong nhưng không tạo undo level cho
+                    // mỗi lần thay — cả lượt chỉ thêm 1 level khi xong hết (bên dưới).
+                    editor.undoManager.ignore(function () {
+                        replaceImageSrc(editor, url, media.url);
+                    });
+                }
+
+                done++;
+                notification.progressBar.value(Math.round(done / urls.length * 100));
+                next();
+            });
+        }, function () {
+            notification.close();
+            // Ghi nhận nội dung đã thay link: thêm undo level + đánh dấu thay đổi
+            // để autosave/đồng bộ textarea nhận src mới.
+            editor.undoManager.add();
+            editor.setDirty(true);
+
+            if (failed.length) {
+                var shown = failed.slice(0, 5).map(function (url) {
+                    return dom.encode(url);
+                });
+                if (failed.length > shown.length) {
+                    shown.push('…');
+                }
+                editor.notificationManager.open({
+                    text: dom.encode((mediaMessages.importFailed || '').replace(':count', failed.length)) + '<br>' + shown.join('<br>'),
+                    type: 'warning',
+                    timeout: 8000
+                });
+            }
+        });
+    }
+
+    function setupPastedImageImport(editor) {
+        // PastePostProcess chạy TRƯỚC khi TinyMCE chèn nội dung đã dán: chuẩn hoá
+        // <img> (lấy ảnh thật từ lazy-load, bỏ srcset/<source> vẫn trỏ về site cũ
+        // — trình duyệt sẽ ưu tiên chúng hơn src mới) và gom URL cần tải về.
+        editor.on('PastePostProcess', function (e) {
+            // Copy/paste ngay trong TinyMCE: ảnh đã được xử lý từ lần dán đầu tiên.
+            if (e.internal || !e.node) {
+                return;
+            }
+
+            var urls = [];
+            Array.prototype.forEach.call(e.node.querySelectorAll('img'), function (img) {
+                var url = pastedImageUrl(img);
+                if (!url || isOwnImage(url)) {
+                    return;
+                }
+
+                img.setAttribute('src', url);
+                ['srcset', 'sizes', 'data-src', 'data-srcset', 'data-lazy-src', 'data-original'].forEach(function (attr) {
+                    img.removeAttribute(attr);
+                });
+
+                var picture = img.parentNode;
+                if (picture && picture.nodeName === 'PICTURE') {
+                    Array.prototype.slice.call(picture.querySelectorAll('source')).forEach(function (source) {
+                        source.parentNode.removeChild(source);
+                    });
+                }
+
+                if (urls.indexOf(url) === -1) {
+                    urls.push(url);
+                }
+            });
+
+            if (urls.length) {
+                // Đợi nội dung được chèn vào editor xong rồi mới bắt đầu tải.
+                setTimeout(function () {
+                    importPastedImages(editor, urls);
+                }, 0);
+            }
+        });
+    }
+
     tinymce.init({
         selector: '.tinymce-editor',
         min_height: 500,
@@ -353,6 +542,10 @@ $(document).ready(function () {
 
             if (window.NewnetMediaPickerAvailable && mediaConfig.uploadUrl) {
                 setupMediaDropUpload(editor);
+            }
+
+            if (window.NewnetMediaPickerAvailable && mediaConfig.importUrl) {
+                setupPastedImageImport(editor);
             }
 
             // Mở thẳng thư viện media từ toolbar, không cần qua dialog Chèn ảnh/
