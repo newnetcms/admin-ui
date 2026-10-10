@@ -1,6 +1,32 @@
 $(document).ready(function () {
     "use strict"; // Start of use strict
 
+    // Chèn file chọn từ thư viện media (nút "Quản lý tệp" trên toolbar) vào đúng
+    // vị trí con trỏ lúc bấm nút — modal làm editor mất focus nên phải lưu
+    // bookmark trước rồi khôi phục lại. Theo loại file: ảnh → <img>, video/audio →
+    // thẻ phát tương ứng, còn lại → link tới file.
+    function insertMediaIntoEditor(editor, media, bookmark) {
+        var dom = editor.dom;
+        var linkAttrs = {href: media.url, target: '_blank', rel: 'noopener'};
+
+        editor.focus();
+        if (bookmark) {
+            editor.selection.moveToBookmark(bookmark);
+        }
+
+        if (media.kind === 'image') {
+            editor.insertContent(dom.createHTML('img', {src: media.url, alt: media.name}));
+        } else if (media.kind === 'video' || media.kind === 'audio') {
+            // Truyền html rỗng để ra thẻ đóng mở đủ (<video></video>), không bị self-close.
+            editor.insertContent(dom.createHTML(media.kind, {src: media.url, controls: 'controls'}, ''));
+        } else if (!editor.selection.isCollapsed()) {
+            // Đang bôi đen chữ thì biến chính đoạn đó thành link, giữ nguyên định dạng.
+            editor.execCommand('mceInsertLink', false, linkAttrs);
+        } else {
+            editor.insertContent(dom.createHTML('a', linkAttrs, dom.encode(media.name)));
+        }
+    }
+
     tinymce.init({
         selector: '.tinymce-editor',
         min_height: 500,
@@ -10,7 +36,7 @@ $(document).ready(function () {
         hidden_input: false,
         language: window.locale || 'vi',
         plugins: 'autoresize preview paste importcss searchreplace autolink autosave save directionality codemirror visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap quickbars emoticons',
-        toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl | code',
+        toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | mediamanager insertfile image media template link anchor codesample | ltr rtl | code',
         toolbar_sticky: true,
         toolbar_mode: 'sliding',
         toolbar_sticky_offset: 58,
@@ -124,6 +150,29 @@ $(document).ready(function () {
             editor.on('paste', function(e) {
                 console.log('Paste content');
             });
+
+            // Mở thẳng thư viện media từ toolbar, không cần qua dialog Chèn ảnh/
+            // Link — chọn hoặc upload file nào cũng chèn được (filetype "any").
+            if (window.NewnetMediaPickerAvailable) {
+                editor.ui.registry.addButton('mediamanager', {
+                    icon: 'gallery',
+                    tooltip: window.NewnetMediaPickerLabel || 'File manager',
+                    onAction: function () {
+                        if (!window.NewnetMediaPicker) {
+                            return;
+                        }
+
+                        var bookmark = editor.selection.getBookmark(2, true);
+
+                        window.NewnetMediaPicker.open({
+                            filetype: 'any',
+                            onSelect: function (media) {
+                                insertMediaIntoEditor(editor, media, bookmark);
+                            }
+                        });
+                    }
+                });
+            }
         },
         remove_empty: false,              // Không xóa thẻ trống
         verify_html: false,               // Không kiểm tra lại HTML

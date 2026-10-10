@@ -27,7 +27,10 @@
 @once
     @if(view()->exists('media::form.media') && Route::has('media.admin.media.ajaxMedia'))
         @include('media::form.media', ['name' => 'tinymce_media_picker', 'label' => '', 'media_type' => 'editor'])
-        <script>window.NewnetMediaPickerAvailable = true;</script>
+        <script>
+            window.NewnetMediaPickerAvailable = true;
+            window.NewnetMediaPickerLabel = {!! json_encode(__('media::media.picker.title'), JSON_HEX_TAG | JSON_UNESCAPED_UNICODE) !!};
+        </script>
     @endif
 @endonce
 
